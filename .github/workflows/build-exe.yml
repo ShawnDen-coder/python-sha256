@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-on-win:
-    runs-on: windows-2022 # 运行的平台是 win 2022 server
+    runs-on: [ windows-latest ] # 运行的平台是 win 2022 server
     steps:
       - name: checkout
         uses: actions/checkout@v4 # checout 到对应的代码
@@ -22,7 +22,82 @@ jobs:
       - name: build
         run: pyinstaller sha256.py -F # 运行 build
       - name: upload EXE File
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4 # 这里是上传的action
+        with:
+          name: sha256-windows-exe # 压缩包文件名
+          path: dist/sha256.exe # build 后的路径
+
+  download_build_win_files:
+    runs-on: [ windows-latest ] # 运行的平台是 win 2022 server
+    needs: build-on-win # 需要 build-on-win 运行完成才能运行当前的job
+    steps:
+      - name: download exe file
+        uses: actions/download-artifact@v4 # 下载文件的 action
         with:
           name: sha256-windows-exe
-          path: dist/sha256.exe
+        run: |
+          ls
+          ./sha256.exe sha256.exe
+
+  build-on-linux:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4 # checout 到对应的代码
+      - uses: actions/setup-python@v5 # 设置 python 环境
+        with: # 设置对应的参数
+          python-version: '3.10'
+      - run: python --version # check 一下 python 版本
+      - name: install pyinstaller # 使用 pip 安装 pyinstaller
+        run: |
+          pip install pyinstaller
+          pyinstaller --version
+      - name: build
+        run: pyinstaller sha256.py -F # 运行 build
+      - name: upload EXE File
+        uses: actions/upload-artifact@v4 # 这里是上传的action
+        with:
+          name: sha256-linux-exe # 压缩包文件名 这个名字因为是最后的文件，所以不能和别的 jobs 重名
+          path: dist/sha256 # build 后的路径
+  download_build_linux_files:
+    runs-on: [ ubuntu-latest ]
+    needs: build-on-linux # 需要 build-on-linux 运行完成才能运行当前的job
+    steps:
+      - name: download exe file
+        uses: actions/download-artifact@v4 # 下载文件的 action
+        run: |
+          ls
+          chmod +x sha256
+          ./sha256 sha256
+
+  build-on-macos:
+    runs-on: [ macos-latest ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4 # checout 到对应的代码
+      - uses: actions/setup-python@v5 # 设置 python 环境
+        with: # 设置对应的参数
+          python-version: '3.10'
+      - run: python --version # check 一下 python 版本
+      - name: install pyinstaller # 使用 pip 安装 pyinstaller
+        run: |
+          pip install pyinstaller
+          pyinstaller --version
+      - name: build
+        run: pyinstaller sha256.py -F # 运行 build
+      - name: upload EXE File
+        uses: actions/upload-artifact@v4 # 这里是上传的action
+        with:
+          name: sha256-mac # 压缩包文件名 这个名字因为是最后的文件，所以不能和别的 jobs 重名
+          path: dist/sha256 # build 后的路径
+
+  download_build_macos_files:
+    runs-on: [ macos-latest ]
+    needs: build-on-macos # 需要 build-on-macos 运行完成才能运行当前的job
+    steps:
+      - name: download exe file
+        uses: actions/download-artifact@v4 # 下载文件的 action
+        run: |
+          ls
+          chmod +x sha256
+          ./sha256 sha256
