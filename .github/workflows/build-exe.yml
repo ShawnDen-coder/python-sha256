@@ -65,6 +65,8 @@ jobs:
     steps:
       - name: download exe file
         uses: actions/download-artifact@v4 # 下载文件的 action
+        with:
+          name: sha256-windows-exe
         run: |
           ls
           chmod +x sha256
@@ -97,6 +99,8 @@ jobs:
     steps:
       - name: download exe file
         uses: actions/download-artifact@v4 # 下载文件的 action
+        with:
+          name: sha256-windows-exe
         run: |
           ls
           chmod +x sha256
