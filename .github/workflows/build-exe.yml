@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
   jobs:
-    build:
+    build-on-win:
       runs-on: windows-2022
       setps:
         - name: checkout
