@@ -5,19 +5,19 @@ on:
       - master
   workflow_dispatch:
 
-  jobs:
-    build-on-win:
-      runs-on: windows-2022
-      setps:
-        - name: checkout
-          uses: actions/checkout@v4
-        - uses: actions/setup-python@v5
-          with:
-            python-version: '3.10'
-        - run: python --version
-        - name: install pyinstaller
-          run: |
-            pip install pyinstaller
-            pyinstaller --version
-        - name: build
-          run: pyinstaller sha256.py -F
+jobs:
+  build-on-win:
+    runs-on: windows-2022
+    setps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python --version
+      - name: install pyinstaller
+        run: |
+          pip install pyinstaller
+          pyinstaller --version
+      - name: build
+        run: pyinstaller sha256.py -F
