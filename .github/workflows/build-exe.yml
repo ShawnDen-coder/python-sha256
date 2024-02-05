@@ -35,6 +35,7 @@ jobs:
         uses: actions/download-artifact@v4 # 下载文件的 action
         with:
           name: sha256-windows-exe
+      - name: test binary file
         run: |
           ls
           ./sha256.exe sha256.exe
@@ -66,7 +67,8 @@ jobs:
       - name: download exe file
         uses: actions/download-artifact@v4 # 下载文件的 action
         with:
-          name: sha256-windows-exe
+          name: sha256-linux-exe
+      - name: test binary file
         run: |
           ls
           chmod +x sha256
@@ -100,7 +102,8 @@ jobs:
       - name: download exe file
         uses: actions/download-artifact@v4 # 下载文件的 action
         with:
-          name: sha256-windows-exe
+          name: sha256-mac
+      - name: test binary file
         run: |
           ls
           chmod +x sha256
