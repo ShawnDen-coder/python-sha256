@@ -1,26 +1,28 @@
-name: build # action 名称
+name: 'CI'
 on:
-  pull_request:
-    branches:
-      - master  # 当主分支发生 pull_request 触发
-  workflow_dispatch: # 支持手动触发
-
+  push:
+    tags:
+      - '*'
 jobs:
-  build-on-win:
-    runs-on: [ windows-latest ] # 运行的平台是 win 2022 server
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v4 # checout 到对应的代码
+
       - uses: actions/setup-python@v5 # 设置 python 环境
         with: # 设置对应的参数
           python-version: '3.10'
       - run: python --version # check 一下 python 版本
+
       - name: install pyinstaller # 使用 pip 安装 pyinstaller
         run: |
           pip install pyinstaller
           pyinstaller --version
       - name: build
         run: pyinstaller sha256.py -F # 运行 build
+
       - name: upload EXE File
         uses: actions/upload-artifact@v4 # 这里是上传的action
         with:
